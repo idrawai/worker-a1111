@@ -4,7 +4,6 @@ import runpod
 import requests
 from requests.adapters import HTTPAdapter, Retry
 
-
 automatic_session = requests.Session()
 retries = Retry(total=10, backoff_factor=0.1, status_forcelist=[502, 503, 504])
 automatic_session.mount('http://', HTTPAdapter(max_retries=retries))
@@ -13,6 +12,7 @@ automatic_session.mount('http://', HTTPAdapter(max_retries=retries))
 # ---------------------------------------------------------------------------- #
 #                              Automatic Functions                             #
 # ---------------------------------------------------------------------------- #
+
 def wait_for_service(url):
     '''
     Check if the service is ready to receive requests.
@@ -29,12 +29,29 @@ def wait_for_service(url):
         time.sleep(0.2)
 
 
-def run_inference(inference_request):
-    '''
-    Run inference on a request.
-    '''
-    response = automatic_session.post(url='http://127.0.0.1:3000/sdapi/v1/txt2img',
-                                      json=inference_request, timeout=600)
+def run_inference(params):
+    config = {
+        "baseurl": "http://127.0.0.1:3000",
+        "api": {
+            "txt2img":  "/sdapi/v1/txt2img",
+            "img2img":  "/sdapi/v1/img2img",
+        },
+        "timeout": 600
+    }
+
+    api_name = params["api_name"]
+    path = None
+
+    if api_name in config["api"]:
+        path = config["api"][api_name]
+    else:
+        raise Exception("Method '%s' not yet implemented")
+
+    response = automatic_session.post(
+            url='%s%s' % (config["baseurl"], path),
+            json=params, 
+            timeout=config["timeout"])
+
     return response.json()
 
 
