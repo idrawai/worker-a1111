@@ -1,8 +1,7 @@
 # Note:
 # Use Dockerfile.NetworkVolume only if you're going to store your models on Network Volume.
-# To use the Dockerfile as-is, you must store your models in the /runpod-volume/models directory.
-# If you don't want to use a Network Volume, and instead want to add models to the image, 
-# use the default Dockerfile.
+# Use Dockerfile.NetworkVolume as-is, store your models in the /runpod-volume/models directory.
+# Use Dockerfile (default) if you want to add models to the image, instead of Network Volume.
 # 
 # ---------------------------------------------------------------------------- #
 #                         Stage 1: Download the models                         #
